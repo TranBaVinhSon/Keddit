@@ -5,10 +5,10 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import com.droidcba.kedditbysteps.commons.extensions.inflate
 import com.example.sontbv.keddit.commons.RedditNewsItem
 import com.example.sontbv.keddit.features.adapter.NewsAdapter
 import com.example.sontbv.keddit.features.news.NewsManager
+import inflate
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.news_fragment.*

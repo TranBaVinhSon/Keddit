@@ -1,25 +1,27 @@
 package com.example.sontbv.keddit.features.news
 
+import com.example.sontbv.keddit.api.RestAPI
 import com.example.sontbv.keddit.commons.RedditNewsItem
 import io.reactivex.Observable
 
-class NewsManager() {
-    fun getNews(): Observable<List<RedditNewsItem>> {
+class NewsManager(private val api: RestAPI = RestAPI()) {
+    fun getNews(limit: String = "10"): Observable<List<RedditNewsItem>> {
         return Observable.create {
             subsriber ->
+            val callResponse = api.getNews("", limit)
+            val response = callResponse.execute()
 
-            val news = mutableListOf<RedditNewsItem>()
-            for (i in 1..10) {
-                news.add(RedditNewsItem(
-                        "author $i",
-                        "title $i",
-                        i,
-                        1457207701L - i * 200,
-                        "http://lorempixel.com/200/200/technics/$i",
-                        "url"
-                ))
+            if(response.isSuccessful){
+                val news = response.body()!!.data.children.map {
+                    val item = it.data
+                    RedditNewsItem(item.author, item.title, item.num_comments,
+                            item.created, item.thumbnail, item.url)
+                }
+                subsriber.onNext(news)
+                subsriber.onComplete()
+            }else{
+                subsriber.onError(Throwable(response.message()))
             }
-            subsriber.onNext(news)
         }
     }
 }
